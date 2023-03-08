@@ -1,22 +1,15 @@
-#ifdef ARDUINO_ARCH_ESP32
-  #include <WiFi.h>
-  #include <WebServer.h>
-  #define WEB_SERVER WebServer
-  #define ESP_RESET ESP.restart()
-#else
-  #include <ESP8266WiFi.h>
-  #include <ESP8266WebServer.h>
-  #define WEB_SERVER ESP8266WebServer
-  #define ESP_RESET ESP.reset()
-#endif
-
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
 #include <WS2812FX.h>
+
+#include "src.h"
+
+#define WEB_SERVER ESP8266WebServer
+#define ESP_RESET ESP.reset()
 
 extern const char index_html[];
 extern const char main_js[];
 
-#define WIFI_SSID "TP-Link_06E2"
-#define WIFI_PASSWORD "00726535"
 
 //#define STATIC_IP                       // uncomment for static IP, set IP below
 #ifdef STATIC_IP
@@ -28,12 +21,6 @@ extern const char main_js[];
 // QUICKFIX...See https://github.com/esp8266/Arduino/issues/263
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
-
-#define LED_PIN 4                       // 0 = GPIO0, 2=GPIO2
-#define LED_COUNT 60
-
-#define WIFI_TIMEOUT 30000              // checks WiFi every ...ms. Reset after this time, if WiFi cannot reconnect.
-#define HTTP_PORT 80
 
 unsigned long auto_last_change = 0;
 unsigned long last_wifi_check_time = 0;
