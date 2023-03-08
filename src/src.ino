@@ -34,12 +34,12 @@ WEB_SERVER server(HTTP_PORT);
 void setup(){
   Serial.begin(115200);
   delay(500);
-  Serial.println("\n\nStarting...");
+  DEBUG_PRINTLN("\n\nStarting...");
 
   modes.reserve(5000);
   modes_setup();
 
-  Serial.println("WS2812FX setup");
+  DEBUG_PRINTLN("WS2812FX setup");
   ws2812fx.init();
   ws2812fx.setMode(FX_MODE_STATIC);
   ws2812fx.setColor(0xFF5900);
@@ -47,19 +47,19 @@ void setup(){
   ws2812fx.setBrightness(128);
   ws2812fx.start();
 
-  Serial.println("Wifi setup");
+  DEBUG_PRINTLN("Wifi setup");
   wifi_setup();
  
-  Serial.println("HTTP server setup");
+  DEBUG_PRINTLN("HTTP server setup");
   server.on("/", srv_handle_index_html);
   server.on("/main.js", srv_handle_main_js);
   server.on("/modes", srv_handle_modes);
   server.on("/set", srv_handle_set);
   server.onNotFound(srv_handle_not_found);
   server.begin();
-  Serial.println("HTTP server started.");
+  DEBUG_PRINTLN("HTTP server started.");
 
-  Serial.println("ready!");
+  DEBUG_PRINTLN("ready!");
 }
 
 
@@ -72,10 +72,10 @@ void loop() {
   if(now - last_wifi_check_time > WIFI_TIMEOUT) {
     Serial.print("Checking WiFi... ");
     if(WiFi.status() != WL_CONNECTED) {
-      Serial.println("WiFi connection lost. Reconnecting...");
+      DEBUG_PRINTLN("WiFi connection lost. Reconnecting...");
       wifi_setup();
     } else {
-      Serial.println("OK");
+      DEBUG_PRINTLN("OK");
     }
     last_wifi_check_time = now;
   }
@@ -91,7 +91,7 @@ void loop() {
       }
     }
     ws2812fx.setMode(next_mode);
-    Serial.print("mode is "); Serial.println(ws2812fx.getModeName(ws2812fx.getMode()));
+    Serial.print("mode is "); DEBUG_PRINTLN(ws2812fx.getModeName(ws2812fx.getMode()));
     auto_last_change = now;
   }
 }
@@ -102,9 +102,9 @@ void loop() {
  * Connect to WiFi. If no connection is made within WIFI_TIMEOUT, ESP gets resettet.
  */
 void wifi_setup() {
-  Serial.println();
+  DEBUG_PRINTLN();
   Serial.print("Connecting to ");
-  Serial.println(WIFI_SSID);
+  DEBUG_PRINTLN(WIFI_SSID);
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   WiFi.mode(WIFI_STA);
@@ -118,7 +118,7 @@ void wifi_setup() {
     Serial.print(".");
 
     if(millis() - connect_start > WIFI_TIMEOUT) {
-      Serial.println();
+      DEBUG_PRINTLN();
       Serial.print("Tried ");
       Serial.print(WIFI_TIMEOUT);
       Serial.print("ms. Resetting ESP now.");
@@ -126,11 +126,11 @@ void wifi_setup() {
     }
   }
 
-  Serial.println("");
-  Serial.println("WiFi connected");  
+  DEBUG_PRINTLN("");
+  DEBUG_PRINTLN("WiFi connected");  
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.println();
+  DEBUG_PRINTLN(WiFi.localIP());
+  DEBUG_PRINTLN();
 }
 
 
@@ -182,7 +182,7 @@ void srv_handle_set() {
       uint8_t new_mode = sizeof(myModes) > 0 ? myModes[tmp % sizeof(myModes)] : tmp % ws2812fx.getModeCount();
       ws2812fx.setMode(new_mode);
       auto_cycle = false;
-      Serial.print("mode is "); Serial.println(ws2812fx.getModeName(ws2812fx.getMode()));
+      Serial.print("mode is "); DEBUG_PRINTLN(ws2812fx.getModeName(ws2812fx.getMode()));
     }
 
     if(server.argName(i) == "b") {
@@ -194,7 +194,7 @@ void srv_handle_set() {
         uint8_t tmp = (uint8_t) strtol(server.arg(i).c_str(), NULL, 10);
         ws2812fx.setBrightness(tmp);
       }
-      Serial.print("brightness is "); Serial.println(ws2812fx.getBrightness());
+      Serial.print("brightness is "); DEBUG_PRINTLN(ws2812fx.getBrightness());
     }
 
     if(server.argName(i) == "s") {
@@ -206,7 +206,7 @@ void srv_handle_set() {
         uint16_t tmp = (uint16_t) strtol(server.arg(i).c_str(), NULL, 10);
         ws2812fx.setSpeed(tmp);
       }
-      Serial.print("speed is "); Serial.println(ws2812fx.getSpeed());
+      Serial.print("speed is "); DEBUG_PRINTLN(ws2812fx.getSpeed());
     }
 
     if(server.argName(i) == "a") {
