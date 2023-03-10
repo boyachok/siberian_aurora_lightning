@@ -121,3 +121,12 @@ void srv_handle_set() {
   }
   server.send(200, "text/plain", "OK");
 }
+
+void web_server_init() {
+  server.on("/", srv_handle_index_html);
+  server.on("/main.js", srv_handle_main_js);
+  server.on("/modes", srv_handle_modes);
+  server.on("/set", srv_handle_set);
+  server.onNotFound(srv_handle_not_found);
+  server.begin();
+} 
