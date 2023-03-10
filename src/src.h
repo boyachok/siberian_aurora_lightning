@@ -11,8 +11,8 @@
 #define LED_STRIP_3_PIN 4
 #define LED_STRIP_3_COUNT 60
 
-#define WIFI_SSID "TP-Link_06E2"
-#define WIFI_PASSWORD "00726535"
+#define WIFI_SSID "HUAWEI-D1CC"
+#define WIFI_PASSWORD "13331154"
 
 #define LED_PIN 4                       // 0 = GPIO0, 2=GPIO2
 #define LED_COUNT 60
